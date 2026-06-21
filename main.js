@@ -1,10 +1,11 @@
 import axios from "axios";
 
 // Aşağıdaki Fonksiyonu değiştirmeyin.
+
 async function ipAdresimiAl() {
   return await axios({
     method: "get",
-    url: "https://apis.ergineer.com/ipadresim",
+    url: "https://api.ipify.org",
   }).then(function (response) {
     return response.data;
   });
@@ -30,7 +31,12 @@ console.log(ipAdresim);
 */
 
 async function getData() {
-  /* kodlar buraya */
+  return await axios({
+    method: "get",
+    url: `http://ip-api.com/json/${ipAdresim}?fields=status,message,country,countryCode,city,zip,lat,lon,timezone,currency,isp,query`,
+  }).then(function (response) {
+    return response.data;
+  });
 }
 
 /*
@@ -54,11 +60,56 @@ async function getData() {
   </div>
 */
 
-function cardOlustur(/* kodlar buraya */) {
-  /* kodlar buraya */
+function cardOlustur(data) {
+  console.log("Kart oluşturma:", data);
+  const card = document.createElement("div");
+  card.classList.add("card");
+
+  const cardImg = document.createElement("img");
+  cardImg.src = `https://flaglog.com/codes/standardized-rectangle-120px/${data.countryCode}.png`;
+  card.appendChild(cardImg);
+
+  const cardInfo = document.createElement("div");
+  cardInfo.classList.add("card-info");
+
+  const cardIP = document.createElement("h3");
+  cardIP.classList.add("ip");
+  cardIP.textContent = ipAdresim;
+
+  const cardCInfo = document.createElement("p");
+  cardCInfo.classList.add("ulke");
+  cardCInfo.textContent = `${data.country} (${data.countryCode})`;
+
+  const cardEBInfo = document.createElement("p");
+  cardEBInfo.textContent = `Enlem: ${data.lat} - Boylam: ${data.lon}`;
+
+  const cardCityInfo = document.createElement("p");
+  cardCityInfo.textContent = `Şehir: ${data.city} `;
+
+  const cardTZInfo = document.createElement("p");
+  cardTZInfo.textContent = `Saat dilimi: ${data.timezone}`;
+
+  const cardCRInfo = document.createElement("p");
+  cardCRInfo.textContent = `Para birimi: ${data.currency}`;
+
+  const cardISPInfo = document.createElement("p");
+  cardISPInfo.textContent = `ISP: ${data.isp}`;
+
+  cardInfo.appendChild(cardIP);
+  cardInfo.appendChild(cardCInfo);
+  cardInfo.appendChild(cardEBInfo);
+  cardInfo.appendChild(cardCityInfo);
+  cardInfo.appendChild(cardTZInfo);
+  cardInfo.appendChild(cardCRInfo);
+  cardInfo.appendChild(cardISPInfo);
+
+  card.appendChild(cardInfo);
+
+  return card;
 }
 
 // Buradan sonrasını değiştirmeyin, burası yazdığınız kodu sayfaya uyguluyor.
+
 getData().then((response) => {
   const cardContent = cardOlustur(response);
   const container = document.querySelector(".container");
